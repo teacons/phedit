@@ -11,9 +11,9 @@ public class OpenDir extends JDialog {
     static File dir;
 
     OpenDir() {
-        buttonCancel.setName("buttonCancel");
         buttonOK.setName("buttonOK");
         chooseDir.setName("chooseDir");
+        buttonCancel.setName("buttonCancel");
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);

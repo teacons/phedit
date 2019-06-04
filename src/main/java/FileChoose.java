@@ -19,9 +19,9 @@ public class FileChoose extends JFrame {
 
     FileChoose(final File file) {
         super("Выбор файла");
-        filesList.setName("filesList");
         editButton.setName("editButton");
         printButton.setName("printButton");
+        filesList.setName("filesList");
         setSize(640, 480);
         setExtendedState(MAXIMIZED_BOTH);
         setContentPane(explorerPanel);
