@@ -5,12 +5,10 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
-import java.awt.print.PrinterException;
-import java.awt.print.PrinterJob;
 import java.io.File;
 import java.io.IOException;
 
-public class print implements Printable, ActionListener {
+public class Print implements Printable, ActionListener {
 String path;
 BufferedImage img = null;
 
@@ -31,16 +29,5 @@ BufferedImage img = null;
         g.drawImage(img, 0, 0, null);
         return PAGE_EXISTS;
     }
-    public void actionPerformed(ActionEvent e) {
-        PrinterJob job = PrinterJob.getPrinterJob();
-        job.setPrintable(this);
-        boolean ok = job.printDialog();
-        if (ok) {
-            try {
-                job.print();
-            } catch (PrinterException ex) {
-
-            }
-        }
-    }
+    public void actionPerformed(ActionEvent e) { }
 }

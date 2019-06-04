@@ -1,9 +1,9 @@
-public class launch {
+public class Launch {
     public static void main(String[] args) {
-        openDir dialog = new openDir();
+        OpenDir dialog = new OpenDir();
         dialog.pack();
         dialog.setVisible(true);
-        fileChoose a = new fileChoose(dialog.dir);
+        FileChoose a = new FileChoose(OpenDir.dir);
         a.pack();
         a.setVisible(true);
     }

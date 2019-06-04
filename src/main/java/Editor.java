@@ -1,9 +1,10 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
@@ -19,7 +20,7 @@ import java.io.IOException;
 /**
  * @author unknown
  */
-class editor extends JFrame {
+class Editor extends JFrame {
     private BufferedImage imag;
     private int rezhim=0;
     private int xPad;
@@ -28,8 +29,11 @@ class editor extends JFrame {
     private Color maincolor;
     private JColorChooser tcc;
 
-    editor(String path) {
+    Editor(String path) {
         initComponents();
+        nameChanger();
+        MainFrame.setName("MainFrame");
+        MainPanel.setName("MainPanel");
         maincolor = Color.black;
         ColorButton.setBackground(maincolor);
         setContentPane(MainPanel);
@@ -42,11 +46,9 @@ class editor extends JFrame {
         catch (IOException ex) { JOptionPane.showMessageDialog(MainFrame, "Исключение ввода-вывода"); }
         catch (Exception ignored) { }
         tcc = new JColorChooser(maincolor);
-        tcc.getSelectionModel().addChangeListener(new ChangeListener() {
-            public void stateChanged(ChangeEvent e) {
-                maincolor = tcc.getColor();
-                ColorButton.setBackground(maincolor);
-            }
+        tcc.getSelectionModel().addChangeListener(e -> {
+            maincolor = tcc.getColor();
+            ColorButton.setBackground(maincolor);
         });
     }
 
@@ -174,15 +176,15 @@ class editor extends JFrame {
 
     private void button1ActionPerformed(ActionEvent e) {
         PrinterJob job = PrinterJob.getPrinterJob();
-        print test = new print();
+        Print test = new Print();
         test.img = imag;
         job.setPrintable(test);
         boolean ok = job.printDialog();
         if (ok) {
             try {
                 job.print();
-            } catch (PrinterException ignored) {
-
+            } catch (PrinterException ex) {
+                JOptionPane.showMessageDialog(Editor.this, "Исключение" + ex.toString());
             }
         }
     }
@@ -202,6 +204,23 @@ class editor extends JFrame {
         g2.drawImage(src, x, y, width, height, null);
         g2.dispose();
         return dst;
+    }
+    private void nameChanger() {
+        Pencil.setName("Pencil");
+        Brush.setName("Brush");
+        Eraser.setName("Eraser");
+        Black.setName("Black");
+        White.setName("White");
+        Blue.setName("Blue");
+        Red.setName("Red");
+        Orange.setName("Orange");
+        Yellow.setName("Yellow");
+        Green.setName("Green");
+        Pink.setName("Pink");
+        Magenta.setName("Magenta");
+        Cyan.setName("Cyan");
+        ColorButton.setName("ColorButton");
+        button1.setName("printer");
     }
 
 
@@ -239,6 +258,7 @@ class editor extends JFrame {
             MainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             MainFrame.setTitle("\u0420\u0435\u0434\u0430\u043a\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435");
             MainFrame.setMinimumSize(new Dimension(500, 500));
+            MainFrame.setName("MainFrame");
             Container MainFrameContentPane = MainFrame.getContentPane();
             MainFrameContentPane.setLayout(null);
 
@@ -246,6 +266,11 @@ class editor extends JFrame {
             {
 
                 // JFormDesigner evaluation mark
+                MainPanel.setBorder(new javax.swing.border.CompoundBorder(
+                    new javax.swing.border.TitledBorder(new javax.swing.border.EmptyBorder(0, 0, 0, 0),
+                        "JFormDesigner Evaluation", javax.swing.border.TitledBorder.CENTER,
+                        javax.swing.border.TitledBorder.BOTTOM, new java.awt.Font("Dialog", java.awt.Font.BOLD, 12),
+                        java.awt.Color.red), MainPanel.getBorder())); MainPanel.addPropertyChangeListener(new java.beans.PropertyChangeListener(){public void propertyChange(java.beans.PropertyChangeEvent e){if("border".equals(e.getPropertyName()))throw new RuntimeException();}});
 
                 MainPanel.setLayout(null);
 
@@ -262,39 +287,24 @@ class editor extends JFrame {
                     Pencil.setMaximumSize(new Dimension(30, 30));
                     Pencil.setMinimumSize(new Dimension(30, 30));
                     Pencil.setPreferredSize(new Dimension(30, 30));
-                    Pencil.setIcon(new ImageIcon("C:\\Users\\ivkin\\Downloads\\icon\\pencil30px.png"));
-                    Pencil.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            PencilActionPerformed(e);
-                        }
-                    });
+                    Pencil.setIcon(new ImageIcon(getClass().getResource("/pencil30px.png")));
+                    Pencil.addActionListener(e -> PencilActionPerformed(e));
                     Tools.add(Pencil);
 
                     //---- Brush ----
                     Brush.setMaximumSize(new Dimension(30, 30));
                     Brush.setMinimumSize(new Dimension(30, 30));
                     Brush.setPreferredSize(new Dimension(30, 30));
-                    Brush.setIcon(new ImageIcon("C:\\Users\\ivkin\\Downloads\\icon\\paint-brush30px.png"));
-                    Brush.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            BrushActionPerformed(e);
-                        }
-                    });
+                    Brush.setIcon(new ImageIcon(getClass().getResource("/paint-brush30px.png")));
+                    Brush.addActionListener(e -> BrushActionPerformed(e));
                     Tools.add(Brush);
 
                     //---- Eraser ----
                     Eraser.setMaximumSize(new Dimension(30, 30));
                     Eraser.setMinimumSize(new Dimension(30, 30));
                     Eraser.setPreferredSize(new Dimension(30, 30));
-                    Eraser.setIcon(new ImageIcon("C:\\Users\\ivkin\\Downloads\\icon\\eraser30px.png"));
-                    Eraser.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            EraserActionPerformed(e);
-                        }
-                    });
+                    Eraser.setIcon(new ImageIcon(getClass().getResource("/eraser30px.png")));
+                    Eraser.addActionListener(e -> EraserActionPerformed(e));
                     Tools.add(Eraser);
                 }
                 MainPanel.add(Tools);
@@ -315,12 +325,7 @@ class editor extends JFrame {
                     Black.setBackground(Color.black);
                     Black.setForeground(Color.black);
                     Black.setVerticalAlignment(SwingConstants.TOP);
-                    Black.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            BlackActionPerformed(e);
-                        }
-                    });
+                    Black.addActionListener(e -> BlackActionPerformed(e));
                     ColorsBar.add(Black);
 
                     //---- White ----
@@ -330,12 +335,7 @@ class editor extends JFrame {
                     White.setBackground(Color.white);
                     White.setForeground(Color.white);
                     White.setVerticalAlignment(SwingConstants.TOP);
-                    White.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            WhiteActionPerformed(e);
-                        }
-                    });
+                    White.addActionListener(e -> WhiteActionPerformed(e));
                     ColorsBar.add(White);
 
                     //---- Blue ----
@@ -345,12 +345,7 @@ class editor extends JFrame {
                     Blue.setBackground(Color.blue);
                     Blue.setForeground(Color.blue);
                     Blue.setVerticalAlignment(SwingConstants.TOP);
-                    Blue.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            BlueActionPerformed(e);
-                        }
-                    });
+                    Blue.addActionListener(e -> BlueActionPerformed(e));
                     ColorsBar.add(Blue);
 
                     //---- Red ----
@@ -360,12 +355,7 @@ class editor extends JFrame {
                     Red.setBackground(Color.red);
                     Red.setForeground(Color.red);
                     Red.setVerticalAlignment(SwingConstants.TOP);
-                    Red.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            RedActionPerformed(e);
-                        }
-                    });
+                    Red.addActionListener(e -> RedActionPerformed(e));
                     ColorsBar.add(Red);
 
                     //---- Orange ----
@@ -375,12 +365,7 @@ class editor extends JFrame {
                     Orange.setBackground(Color.orange);
                     Orange.setForeground(Color.orange);
                     Orange.setVerticalAlignment(SwingConstants.TOP);
-                    Orange.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            OrangeActionPerformed(e);
-                        }
-                    });
+                    Orange.addActionListener(e -> OrangeActionPerformed(e));
                     ColorsBar.add(Orange);
 
                     //---- Yellow ----
@@ -390,12 +375,7 @@ class editor extends JFrame {
                     Yellow.setBackground(Color.yellow);
                     Yellow.setForeground(Color.yellow);
                     Yellow.setVerticalAlignment(SwingConstants.TOP);
-                    Yellow.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            YellowActionPerformed(e);
-                        }
-                    });
+                    Yellow.addActionListener(e -> YellowActionPerformed(e));
                     ColorsBar.add(Yellow);
 
                     //---- Green ----
@@ -405,12 +385,7 @@ class editor extends JFrame {
                     Green.setBackground(Color.green);
                     Green.setForeground(Color.green);
                     Green.setVerticalAlignment(SwingConstants.TOP);
-                    Green.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            GreenActionPerformed(e);
-                        }
-                    });
+                    Green.addActionListener(e -> GreenActionPerformed(e));
                     ColorsBar.add(Green);
 
                     //---- Pink ----
@@ -420,12 +395,7 @@ class editor extends JFrame {
                     Pink.setBackground(Color.pink);
                     Pink.setForeground(Color.pink);
                     Pink.setVerticalAlignment(SwingConstants.TOP);
-                    Pink.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            PinkActionPerformed(e);
-                        }
-                    });
+                    Pink.addActionListener(e -> PinkActionPerformed(e));
                     ColorsBar.add(Pink);
 
                     //---- Magenta ----
@@ -435,12 +405,7 @@ class editor extends JFrame {
                     Magenta.setBackground(Color.magenta);
                     Magenta.setForeground(Color.magenta);
                     Magenta.setVerticalAlignment(SwingConstants.TOP);
-                    Magenta.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            MagentaActionPerformed(e);
-                        }
-                    });
+                    Magenta.addActionListener(e -> MagentaActionPerformed(e));
                     ColorsBar.add(Magenta);
 
                     //---- Cyan ----
@@ -450,24 +415,14 @@ class editor extends JFrame {
                     Cyan.setBackground(Color.cyan);
                     Cyan.setForeground(Color.cyan);
                     Cyan.setVerticalAlignment(SwingConstants.TOP);
-                    Cyan.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            CyanActionPerformed(e);
-                        }
-                    });
+                    Cyan.addActionListener(e -> CyanActionPerformed(e));
                     ColorsBar.add(Cyan);
 
                     //---- ColorButton ----
                     ColorButton.setPreferredSize(new Dimension(40, 40));
                     ColorButton.setMaximumSize(new Dimension(40, 40));
                     ColorButton.setMinimumSize(new Dimension(40, 40));
-                    ColorButton.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            ColorButtonActionPerformed(e);
-                        }
-                    });
+                    ColorButton.addActionListener(e -> ColorButtonActionPerformed(e));
                     ColorsBar.add(ColorButton);
                 }
                 MainPanel.add(ColorsBar);
@@ -498,12 +453,7 @@ class editor extends JFrame {
 
                 //---- button1 ----
                 button1.setText("\u041f\u0435\u0447\u0430\u0442\u044c");
-                button1.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        button1ActionPerformed(e);
-                    }
-                });
+                button1.addActionListener(e -> button1ActionPerformed(e));
                 MainPanel.add(button1);
                 button1.setBounds(705, 5, 155, 33);
 
